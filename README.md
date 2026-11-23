@@ -396,7 +396,3 @@ Broken pipes (`kq ls | head`) are silent success, not an error.
   the game.
 
 ---
-
-## License
-
-MIT. See [LICENSE](LICENSE).

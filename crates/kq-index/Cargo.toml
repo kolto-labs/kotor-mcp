@@ -3,7 +3,6 @@ name = "kq-index"
 version = "0.1.0"
 edition.workspace = true
 rust-version.workspace = true
-license.workspace = true
 description = "Discovers a KotOR installation and indexes every resource in it."
 
 [dependencies]

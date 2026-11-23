@@ -9,7 +9,6 @@
   },
   "homepage": "https://github.com/kolto-labs/kq",
   "repository": "https://github.com/kolto-labs/kq",
-  "license": "MIT",
   "keywords": ["kotor", "kotor2", "aurora", "cli", "gff", "ncs"],
   "category": "developer-tools",
   "tags": ["kotor", "cli", "gff", "modding"],
