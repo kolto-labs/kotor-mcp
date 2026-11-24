@@ -1,8 +1,8 @@
-# kq
+# kotor-mcp (`kq` cli)
 
 **Query a Knights of the Old Republic installation like it was plain text.**
 
-`kq` is a command-line tool that treats a KotOR (or KotOR II) game folder as
+**kotor-mcp**, hereby referred to as the cli `kq`, is a command-line tool that treats a KotOR (or KotOR II) game folder as
 structured, searchable data. It reads the game's archives in place — you do
 not extract anything first — and answers questions the way `rg` answers
 questions about a source tree and `jq` answers questions about JSON.
