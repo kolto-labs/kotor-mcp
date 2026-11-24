@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Symlink the kq agent plugin into Cursor's local plugin directory.
+# Link the kq agent plugin into Cursor's local plugin directory.
+# Claude Code installs it from the marketplace instead; see plugin/README.md.
 set -euo pipefail
 
 root="$(cd "$(dirname "$0")/.." && pwd)"
@@ -14,6 +15,9 @@ fi
 
 mkdir -p "$dest_dir"
 ln -sfn "$plugin" "$dest"
-echo "Cursor local plugin: $dest -> $plugin"
-echo "Claude Code: claude --plugin-dir $plugin"
-echo "Other hosts: open the repo so AGENTS.md / CLAUDE.md / GEMINI.md load."
+echo "Cursor: linked $dest -> $plugin (enable kq under Settings > Plugins)"
+echo "Claude Code: /plugin marketplace add kolto-labs/kotor-mcp && /plugin install kq@kolto-labs"
+echo "             or, for one session: claude --plugin-dir $plugin"
+if ! command -v kq >/dev/null 2>&1; then
+  echo "warning: kq is not on PATH; the MCP server will not start until it is." >&2
+fi

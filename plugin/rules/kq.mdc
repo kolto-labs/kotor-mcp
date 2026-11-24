@@ -1,14 +1,14 @@
 ---
-description: kq CLI contract for KotOR queries
+description: kq contract for KotOR / TSL resource questions
 alwaysApply: true
 ---
 
 # kq
 
-Use `kq` to query a KotOR / TSL install in place. Do not extract archives.
+Answer KotOR resource questions with the `kq_*` MCP tools, or the `kq` CLI when they are not
+connected. Query archives in place; never extract BIF/ERF/RIM/MOD files to search them.
 
-- `-i` is `--install`. Grep ignore-case is `--ignore-case` only.
-- Commands: `info`, `ls`, `which`, `cat`, `grep`, `cache`.
-- Prefer `--json`. Exit 3 = no match, 4 = no install.
-- Read-only: no write, pack, compile, or NSS decompile.
-- Follow repo `AGENTS.md` when present.
+- `-i` is `--install`. Case-insensitive grep is `--ignore-case` only.
+- Run `which` before `cat` when a ResRef may exist in several places.
+- Output is JSON by default. Exit 3 means no match, 4 means no install resolved.
+- The `kq-query` and `kq-formats` skills carry flags and per-format output shapes.

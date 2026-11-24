@@ -1,121 +1,110 @@
 # Using kq with AI agents
 
-`kq` ships an agent contract so Cursor, Claude Code, GitHub Copilot, Gemini
-CLI, OpenCode, and similar tools query a KotOR install instead of extracting
-archives or inventing flags.
+kq reaches agents in three layers. Use as many as your tool supports:
 
-Canonical contract: [`AGENTS.md`](../AGENTS.md) at the repo root.
-Installable plugin: [`plugin/`](../plugin/).
+1. **MCP server**: `kq mcp` exposes the read-only commands as tools. It works with any MCP client.
+2. **Plugin**: [`plugin/`](../plugin/) bundles the server config with skills and an explorer agent,
+   for Claude Code and Cursor.
+3. **Repo instructions**: [`AGENTS.md`](../AGENTS.md) is the contract for agents working inside
+   this repository. `CLAUDE.md` and `GEMINI.md` import it.
 
-## What agents get
-
-- **Rules** — always-on CLI contract (`-i` is install, not ignore-case)
-- **Skills** — `kq-query` (how to run the CLI), `kq-formats` (projections)
-- **Subagent** — `kq-explorer` for install questions
-- **Slash command** — `/kq` (Claude Code plugin)
-- **Session hook** — injects the contract at conversation start
-
-## Cursor
-
-Opening this repository is enough. Cursor loads:
-
-- `.cursor/rules/*.mdc`
-- `.cursor/skills/`
-- `.cursor/agents/`
-- `.cursor/hooks.json`
-
-To use the same plugin in **other** Cursor workspaces:
+## The MCP server
 
 ```bash
-mkdir -p ~/.cursor/plugins/local
-ln -sfn "$(pwd)/plugin" ~/.cursor/plugins/local/kq
+kq mcp                      # default install from KQ_INSTALL or the working directory
+kq mcp -i /path/to/game     # pin a default install
 ```
 
-Then enable **kq** under Cursor Settings → Plugins if it does not appear
-automatically. Restart Cursor if hooks do not fire.
+The server speaks MCP over stdio (protocol revisions 2024-11-05 through 2025-11-25). Every tool is
+read-only and accepts an optional `install` argument that overrides the default for that call.
 
-Say things like: “which appearance.2da loads?”, “grep Bastila in dlg”,
-“cat n_bastila as JSON”.
+| Tool | CLI equivalent | Use it to |
+|------|----------------|-----------|
+| `kq_info` | `kq info` | Confirm the target and see what it contains |
+| `kq_ls` | `kq ls` | Find resources by name, type, module, or source |
+| `kq_which` | `kq which` | See every copy of a ResRef and which one loads |
+| `kq_cat` | `kq cat` | Read one decoded resource (JSON, gron, or outline) |
+| `kq_grep` | `kq grep` | Search decoded contents |
+| `kq_graph` | `kq graph` | Find used, unused, overshadowed, and missing references |
+| `kq_delta` | `kq delta` | Diff two resources, or a copy against what it shadows |
 
-## Claude Code
+Each call runs the `kq` binary itself, so output and behavior match the CLI exactly, and the on-disk
+index cache is shared. List-style tools default to a result `limit` (200 for `ls` and `graph`, 50
+for `grep`) to protect the context window; pass `limit: 0` for everything. Output over 200 KB is
+truncated with a note saying how to narrow the query.
 
-From a checkout:
+### Client configuration
+
+**Claude Code**: install the plugin (below), or register the server alone:
 
 ```bash
-claude --plugin-dir "$(pwd)/plugin"
+claude mcp add kq -- kq mcp
 ```
 
-Or add a local marketplace / `/plugin install` pointing at `./plugin`.
-`CLAUDE.md` imports `AGENTS.md`. After the plugin loads, `/kq` and the
-`kq-query` skill are available.
+**Cursor** (`.cursor/mcp.json`), **VS Code** (`.vscode/mcp.json`, top-level key `servers`), and
+most other clients accept the same shape:
+
+```json
+{
+  "mcpServers": {
+    "kq": {
+      "command": "kq",
+      "args": ["mcp"],
+      "env": { "KQ_INSTALL": "/path/to/game" }
+    }
+  }
+}
+```
+
+**Codex CLI** (`~/.codex/config.toml`):
+
+```toml
+[mcp_servers.kq]
+command = "kq"
+args = ["mcp"]
+env = { KQ_INSTALL = "/path/to/game" }
+```
+
+**Smoke test** without a client:
 
 ```bash
-# optional: project-scoped
-# claude --plugin-dir /path/to/kq/plugin
+printf '%s\n' \
+  '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"cli","version":"0"}}}' \
+  '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"kq_info","arguments":{}}}' \
+  | kq mcp -i /path/to/game
 ```
 
-## GitHub Copilot (VS Code / github.com)
+Or explore interactively with `npx @modelcontextprotocol/inspector kq mcp`.
 
-Copilot reads:
+## The plugin
 
-- `.github/copilot-instructions.md`
-- `.github/instructions/kq.instructions.md` (`applyTo: **`)
-
-No extra install. In VS Code, keep the repo open so workspace instructions
-apply.
-
-## Gemini CLI
-
-Gemini CLI reads `GEMINI.md`, which points at `AGENTS.md`. Clone the repo
-and run Gemini from the project root (or add `GEMINI.md` to the files the
-CLI includes).
-
-## OpenCode and other AGENTS.md clients
-
-OpenCode, Codex, and similar tools load `AGENTS.md` automatically when the
-project root is the workspace. No plugin install required.
-
-## Windsurf / Cascade
-
-A short [`.windsurfrules`](../.windsurfrules) file points at `AGENTS.md`.
-
-## Aider and generic assistants
-
-Point the tool at `AGENTS.md` (Aider: `--read AGENTS.md`, or add it to the
-convention file). The same contract applies.
-
-## Local install script
-
-From the repo root:
-
-```bash
-./scripts/install-agent-plugin.sh
+```text
+/plugin marketplace add kolto-labs/kotor-mcp
+/plugin install kq@kolto-labs
 ```
 
-This symlinks `plugin/` to `~/.cursor/plugins/local/kq` and prints Claude
-Code / Copilot notes. It does not copy KotOR game files.
+Contents and Cursor instructions: [`plugin/README.md`](../plugin/README.md). After installing, run
+`/kq:setup`.
 
-## Verify
+| Skill | Invocation | What it does |
+|-------|------------|--------------|
+| `kq-query` | Automatic | The query workflow: resolve the target, narrow, `which` before `cat` |
+| `kq-formats` | Automatic | How to read each type's decoded output and cite field paths |
+| `review` | Automatic or `/kq:review` | Load report for a mod: what loads, what it changes, broken references |
+| `merge-mods` | Automatic or `/kq:merge-mods` | Three-way merge of two mods' edits to one resource |
+| `setup` | `/kq:setup` | Install and connect |
 
-```bash
-# hook (Cursor-style stdin JSON)
-echo '{}' | python3 plugin/hooks/scripts/session-context.py
+## Other agents
 
-# hook (Claude-style empty stdin)
-python3 plugin/hooks/scripts/session-context.py </dev/null
-
-# CLI still works
-kq --help
-```
-
-Expect JSON containing the kq contract and, if `kq` is on `PATH`, its path.
+Tools that read `AGENTS.md` (Codex, OpenCode, GitHub Copilot's coding agent, Windsurf, Aider with
+`--read AGENTS.md`, and others) pick up the repository contract when this repo is the workspace. For
+KotOR questions in any other workspace, connect the MCP server.
 
 ## Prompting tips
 
-Be specific about the **target** and the **question**:
+Name the target and the question:
 
-> Using kq on `$KQ_INSTALL`, which copy of `appearance.2da` loads, then print
-> the row for appearance 8 as gron.
+> Which copy of `appearance.2da` loads in my install, and what does row 8 contain?
 
-Avoid: “search the bif files for Bastila” (that implies extract). Prefer:
-“`kq grep Bastila -t dlg`”.
+"Search the BIF files for Bastila" invites extraction. Ask instead: "find every dialogue that
+mentions Bastila".
