@@ -1,0 +1,19 @@
+{
+  "name": "kolto-labs",
+  "owner": {
+    "name": "Kolto Labs",
+    "url": "https://github.com/kolto-labs"
+  },
+  "metadata": {
+    "description": "Agent plugins for Knights of the Old Republic tooling."
+  },
+  "plugins": [
+    {
+      "name": "kq",
+      "source": "./plugin",
+      "description": "Query a KotOR / TSL install in place: MCP server, skills, and an explorer agent for the kq CLI.",
+      "category": "development",
+      "keywords": ["kotor", "kotor2", "tsl", "modding", "mcp"]
+    }
+  ]
+}

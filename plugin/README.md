@@ -1,44 +1,48 @@
 # kq agent plugin
 
-Teaches AI agents how to use the [kq](https://github.com/kolto-labs/kq) CLI
-on a Knights of the Old Republic install: correct flags, resolve order, and
-decoded-text workflows.
-
-This directory is a **Claude Code** plugin (`.claude-plugin/plugin.json`) and a
-**Cursor** plugin (`.cursor-plugin/plugin.json`).
+Gives AI coding agents a working interface to a Knights of the Old Republic install: the `kq` MCP
+server, skills that teach the query workflow and output formats, mod review and merge workflows, and
+an explorer agent. One directory serves as both a Claude Code plugin and a Cursor plugin.
 
 ## Contents
 
-| Path | Role |
-|------|------|
-| `skills/kq-query/` | How to invoke `kq` |
-| `skills/kq-formats/` | What `cat`/`grep` print per type |
-| `agents/kq-explorer.md` | Subagent that answers from `kq` output |
-| `commands/kq.md` | Slash command `/kq` |
-| `hooks/hooks.json` | Claude Code SessionStart |
-| `hooks/cursor-hooks.json` | Cursor sessionStart |
-| `rules/` | Cursor rules bundled with the plugin |
-
-## Install
-
-See [docs/ai-agents.md](../docs/ai-agents.md) in the repo root for Cursor,
-Claude Code, Copilot, Gemini CLI, OpenCode, and a local symlink.
-
-Quick Cursor (this machine):
-
-```bash
-mkdir -p ~/.cursor/plugins/local
-ln -sfn /absolute/path/to/kq/plugin ~/.cursor/plugins/local/kq
-```
-
-Quick Claude Code:
-
-```bash
-claude --plugin-dir /absolute/path/to/kq/plugin
-```
+| Path | Kind | Purpose |
+|------|------|---------|
+| `.mcp.json` | MCP server | Starts `kq mcp`, which exposes `kq_info`, `kq_ls`, `kq_which`, `kq_cat`, `kq_grep`, `kq_graph`, `kq_delta` |
+| `skills/kq-query/` | Skill, auto | Run queries correctly: interface choice, target resolution, narrowing, flags |
+| `skills/kq-formats/` | Skill, auto | Read what each resource type decodes to and cite field paths |
+| `skills/review/` | Skill, auto or `/kq:review` | Audit a mod or Override folder: what loads, what it changes, missing references |
+| `skills/merge-mods/` | Skill, auto or `/kq:merge-mods` | Three-way merge two mods' edits to one resource |
+| `skills/setup/` | Skill, `/kq:setup` only | Install kq, point it at the game, connect the MCP server |
+| `agents/kq-explorer.md` | Subagent | Multi-step install investigations in a separate context |
+| `rules/kq.mdc` | Cursor rule | Always-on contract for Cursor |
+| `.claude-plugin/plugin.json` | Manifest | Claude Code |
+| `.cursor-plugin/plugin.json` | Manifest | Cursor |
 
 ## Requirements
 
-- Python 3 (session hook)
-- A `kq` binary on `PATH` or `./target/release/kq` in a checkout
-- A KotOR / TSL install (not bundled)
+- `kq` 0.5.0 or later on `PATH` (`kq mcp` was added in 0.5.0). See the repo
+  [README](../README.md#install).
+- A KotOR or TSL install. Set `KQ_INSTALL`, or pass `install` on each tool call.
+
+## Install
+
+**Claude Code**, from the marketplace in this repository:
+
+```text
+/plugin marketplace add kolto-labs/kotor-mcp
+/plugin install kq@kolto-labs
+```
+
+Or load a checkout for one session: `claude --plugin-dir ./plugin`.
+
+**Cursor**: link the directory as a local plugin, then enable **kq** under Settings → Plugins:
+
+```bash
+./scripts/install-agent-plugin.sh
+```
+
+**Any other MCP client**: register a stdio server with the command `kq mcp` (optionally
+`kq mcp -i /path/to/game`). The [AI agents guide](../docs/ai-agents.md) has config snippets.
+
+Then run `/kq:setup` to verify the binary, the install path, and the server connection.

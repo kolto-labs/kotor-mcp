@@ -1,3 +1,10 @@
 target/
 *.log
-.cursor/hooks/state/
+
+# Local tool state and generated reports; never commit these.
+.graph-indexer/
+agentdecompile_projects/
+*.gpr
+*.rep/
+unused.txt
+*-graph.txt

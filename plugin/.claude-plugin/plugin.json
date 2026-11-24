@@ -1,12 +1,21 @@
 {
   "name": "kq",
-  "version": "0.3.5",
-  "description": "Query a Knights of the Old Republic installation with the kq CLI. Teaches agents correct flags, resolve order, and decoded-text workflows.",
+  "version": "0.5.0",
+  "description": "Query a Knights of the Old Republic install in place. Ships the kq MCP server, skills for querying and reading decoded resources, mod review and merge workflows, and an explorer agent.",
   "author": {
     "name": "Arren Kaetris",
-    "url": "https://github.com/kolto-labs/kq"
+    "url": "https://github.com/kolto-labs/kotor-mcp"
   },
-  "homepage": "https://github.com/kolto-labs/kq",
-  "repository": "https://github.com/kolto-labs/kq",
-  "keywords": ["kotor", "kotor2", "aurora", "cli", "gff", "ncs"]
+  "homepage": "https://github.com/kolto-labs/kotor-mcp",
+  "repository": "https://github.com/kolto-labs/kotor-mcp",
+  "keywords": [
+    "kotor",
+    "kotor2",
+    "tsl",
+    "aurora",
+    "gff",
+    "ncs",
+    "modding",
+    "mcp"
+  ]
 }

@@ -83,14 +83,18 @@ From a checkout: `cargo build --release` → `target/release/kq`.
 KotOR / KotOR II themselves are **not** bundled. Point `kq` at an install you
 already have.
 
-### AI agents (Cursor, Claude, Copilot, Gemini, OpenCode)
+### AI agents (MCP server and plugin)
 
-This repo includes an agent contract and a plugin so assistants use `kq`
-instead of extracting archives. See **[Using kq with AI agents](docs/ai-agents.md)**.
+`kq mcp` runs kq as a [Model Context Protocol](https://modelcontextprotocol.io) server over stdio,
+so any MCP client can query an install directly. For Claude Code, the plugin bundles the server
+with skills and an explorer agent:
 
-```bash
-./scripts/install-agent-plugin.sh   # Cursor local plugin symlink
+```text
+/plugin marketplace add kolto-labs/kotor-mcp
+/plugin install kq@kolto-labs
 ```
+
+Other clients, Cursor, and config snippets: **[Using kq with AI agents](docs/ai-agents.md)**.
 
 ---
 
@@ -297,6 +301,16 @@ This is still a mention scan, not a runtime trace. Scripts that build
 names at runtime will not count. Textures and models stay in the report
 unless `--no-assets`.
 
+### `kq mcp`
+
+Serve the read-only commands (`info`, `ls`, `which`, `cat`, `grep`, `graph`, `delta`) as an MCP
+server on stdio. A global `-i` sets the default install; each tool call may override it. See
+[Using kq with AI agents](docs/ai-agents.md).
+
+```bash
+kq mcp -i ~/kotor
+```
+
 ### `kq cache`
 
 ```bash
@@ -374,6 +388,7 @@ Exit codes (stable; scripts should branch on these, not on stderr text):
 | 2 | bad command line (clap) |
 | 3 | valid query, nothing matched |
 | 4 | no install or path could be resolved |
+| 5 | `delta` found differences, or `merge` left conflicts |
 
 Broken pipes (`kq ls | head`) are silent success, not an error.
 
