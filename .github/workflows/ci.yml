@@ -49,3 +49,10 @@ jobs:
       - uses: dtolnay/rust-toolchain@1.82.0
       - uses: Swatinem/rust-cache@v2
       - run: cargo build --workspace --locked
+
+  plugin:
+    name: agent plugin manifests and skills
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/validate-plugin.py

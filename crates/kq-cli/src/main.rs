@@ -13,6 +13,7 @@ mod resource_json;
 mod side;
 
 mod live;
+mod mcp;
 
 mod cmd {
     pub mod cache;
@@ -155,10 +156,26 @@ enum Command {
     Cache(cmd::cache::Args),
     /// Used, unused, and overshadowed copies the live graph can load.
     Graph(cmd::graph::Args),
+    /// Serve the read-only commands as a Model Context Protocol server on stdio.
+    Mcp(mcp::Args),
 }
 
 fn main() -> ExitCode {
     let cli = Cli::parse();
+    if let Command::Mcp(args) = cli.command {
+        let defaults = mcp::Defaults {
+            install: cli.install,
+            nwscript: cli.nwscript,
+            no_cache: cli.no_cache,
+        };
+        return match mcp::run(defaults, args) {
+            Ok(code) => ExitCode::from(code as u8),
+            Err(e) => {
+                eprintln!("kq mcp: {e:#}");
+                ExitCode::from(exit::FAILURE as u8)
+            }
+        };
+    }
     let ctx = Ctx {
         install: cli.install,
         out: Out::new(cli.json && !cli.text, cli.text, cli.color),
@@ -179,6 +196,7 @@ fn main() -> ExitCode {
         Command::Grep(a) => cmd::grep::run(&ctx, a),
         Command::Cache(a) => cmd::cache::run(&ctx, a),
         Command::Graph(a) => cmd::graph::run(&ctx, a),
+        Command::Mcp(_) => unreachable!("handled above"),
     };
 
     match result {

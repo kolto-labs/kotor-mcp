@@ -1,6 +1,6 @@
 # kq text projections
 
-Trees below are what `cat --json` / gron emit. Outline is the same tree,
+Trees below are what `cat` (JSON, the default) and `cat -f gron` emit. Outline is the same tree,
 indented.
 
 ## GFF
@@ -18,6 +18,7 @@ Array of `{ strref, text, sound? }` in StrRef order.
 
 ## NCS
 
+Default `cat` output is decompiled NSS text. With `--disasm` or `-f json`:
 `{ declared_size, instructions: [{ offset, op, … }] }`. ACTION rows include
 `routine`, `name`, `argc`. TSL names are a superset of K1; ids 0–767 match.
 
