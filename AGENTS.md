@@ -41,6 +41,7 @@ cargo build --workspace --locked
 cargo test --workspace --locked
 cargo fmt --all --check
 cargo clippy --workspace --all-targets --locked   # CI sets RUSTFLAGS=-D warnings
+python3 scripts/validate-plugin.py                 # plugin manifests, skills, doc links
 ```
 
 The MSRV is 1.82 and CI builds against it. Check a new dependency's

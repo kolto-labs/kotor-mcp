@@ -59,6 +59,21 @@ reference things the graph cannot see. Say so instead of claiming a reference is
 
 ## Report
 
-Lead with what will not work as intended (overshadowed files, missing references), then the change
-summary, then the resources that load cleanly. For each finding, cite the source container from
-`kq_which` and the field path from `kq_delta`.
+Present findings as one table, most severe first:
+
+| # | Severity | Resource | Finding | Evidence |
+|---|----------|----------|---------|----------|
+
+- **Broken**: the mod's intent cannot take effect (overshadowed file, missing referenced resource).
+- **Risky**: works now but conflicts easily (edits to a shared `2da`, `dialog.tlk`, or `.git`).
+- **Info**: loads cleanly; one-line change summary.
+
+Evidence is the container label from `kq_which` and the field path from `kq_delta` or
+`kq_graph`. Then offer to run `merge-mods` for any Risky shared-file edit.
+
+## Honesty rules
+
+- Report only what kq output shows. Lore about how a mod "usually" behaves is not a finding.
+- If a judgment depends on something you have not queried (another mod's files, a runtime-built
+  script name), say exactly that and name the query you would run.
+- A short table for a clean mod is a good result. Do not pad it.
