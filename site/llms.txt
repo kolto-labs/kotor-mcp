@@ -1,0 +1,36 @@
+# kotor-mcp (`kq`)
+
+> Read-only Model Context Protocol (MCP) server and Rust CLI for querying Knights of the Old Republic I & II (TSL) installations in place without extracting BIF, RIM, ERF, MOD, or SAV archives.
+
+- Launchpad: https://kolto-labs.github.io/kotor-mcp/
+- Repository: https://github.com/kolto-labs/kotor-mcp
+- Registry manifest: https://raw.githubusercontent.com/kolto-labs/kotor-mcp/main/server.json
+- Gemini CLI extension manifest: https://raw.githubusercontent.com/kolto-labs/kotor-mcp/main/gemini-extension.json
+- Claude Desktop `.mcpb` bundle: https://kolto-labs.github.io/kotor-mcp/downloads/kotor-mcp.mcpb
+
+## Install `kq` binary (0.5.0+)
+
+- macOS / Linux:
+  `curl -LsSf https://raw.githubusercontent.com/kolto-labs/kotor-mcp/main/scripts/install.sh | sh`
+- Windows (PowerShell):
+  `powershell -ExecutionPolicy ByPass -c "irm https://raw.githubusercontent.com/kolto-labs/kotor-mcp/main/scripts/install.ps1 | iex"`
+- Cargo (Rust 1.82+):
+  `cargo install --git https://github.com/kolto-labs/kotor-mcp --locked`
+
+## Connect an AI client
+
+- Claude Desktop: download `kotor-mcp.mcpb` or set `"mcpServers": { "kq": { "command": "kq", "args": ["mcp"], "env": { "KQ_INSTALL": "/path/to/game" } } }`
+- Claude Code: `/plugin marketplace add kolto-labs/kotor-mcp` then `/plugin install kq@kolto-labs` (or `claude mcp add kq -e KQ_INSTALL="/path/to/game" -- kq mcp`)
+- Gemini CLI: `gemini extensions install https://github.com/kolto-labs/kotor-mcp` (or `gemini mcp add kq -e KQ_INSTALL="/path/to/game" kq mcp`)
+- ChatGPT / Codex CLI: `codex mcp add kq --env KQ_INSTALL="/path/to/game" -- kq mcp`
+- Universal (`npx add-mcp`): `npx add-mcp "kq mcp -i \"/path/to/game\"" --name kq -g`
+
+## 7 Read-Only MCP Tools
+
+- `kq_info`: Verify target path, detect KotOR I vs II, summarize resource counts.
+- `kq_ls`: List resources across BIF, ERF, RIM, MOD, SAV, and Override.
+- `kq_which`: Show every copy of a ResRef in engine precedence order and star the loaded copy.
+- `kq_cat`: Decode GFF, 2DA, TLK, decompiled NCS (to NSS), MDL, SSF, LIP, BWM, TPC/WAV metadata.
+- `kq_grep`: Regex search across decoded resource text with exact field paths.
+- `kq_graph`: Report used, unused, overshadowed, and missing ResRef references.
+- `kq_delta`: Diff two resources, a loaded copy against what it shadows, or across installs.

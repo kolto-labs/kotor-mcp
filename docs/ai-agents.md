@@ -37,6 +37,16 @@ truncated with a note saying how to narrow the query.
 
 ### Client configuration
 
+**One-click installers** (Cursor, VS Code, Claude Desktop `.mcpb`, Claude.ai, LM Studio, Goose, Raycast): **[kolto-labs.github.io/kotor-mcp](https://kolto-labs.github.io/kotor-mcp/)**.
+
+**Claude Desktop**: download **[kotor-mcp.mcpb](https://kolto-labs.github.io/kotor-mcp/downloads/kotor-mcp.mcpb)** (double-click to install with a native game-folder picker), or use `claude_desktop_config.json` below.
+
+**Gemini CLI**: install the repository extension (uses [`gemini-extension.json`](../gemini-extension.json)):
+
+```bash
+gemini extensions install https://github.com/kolto-labs/kotor-mcp
+```
+
 **Claude Code**: install the plugin (below), or register the server alone:
 
 ```bash

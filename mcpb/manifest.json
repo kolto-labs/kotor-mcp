@@ -1,0 +1,67 @@
+{
+  "manifest_version": "0.3",
+  "name": "kotor-mcp",
+  "display_name": "kotor-mcp (kq)",
+  "version": "0.5.0",
+  "description": "Query a Knights of the Old Republic I or II install in place (read-only).",
+  "author": {
+    "name": "Kolto Labs",
+    "url": "https://kolto-labs.org"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kolto-labs/kotor-mcp"
+  },
+  "homepage": "https://kolto-labs.github.io/kotor-mcp/",
+  "license": "MIT",
+  "icon": "icon.svg",
+  "server": {
+    "type": "node",
+    "entry_point": "server/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/server/index.js"],
+      "env": {
+        "KQ_INSTALL": "${user_config.kotor_install}"
+      }
+    }
+  },
+  "user_config": {
+    "kotor_install": {
+      "type": "directory",
+      "title": "KotOR / KotOR II Install Folder",
+      "description": "Select the folder containing chitin.key.",
+      "required": true
+    }
+  },
+  "tools": [
+    {
+      "name": "kq_info",
+      "description": "Confirm the target KotOR install and summarize resource counts by source or type."
+    },
+    {
+      "name": "kq_ls",
+      "description": "List resources across BIF, ERF, RIM, MOD, SAV, and Override without extracting."
+    },
+    {
+      "name": "kq_which",
+      "description": "Show every copy of a ResRef in precedence order and mark the loaded copy."
+    },
+    {
+      "name": "kq_cat",
+      "description": "Decode and print a GFF, 2DA, TLK, decompiled NCS, MDL, SSF, LIP, or BWM resource."
+    },
+    {
+      "name": "kq_grep",
+      "description": "Regex search across decoded resource text with exact field paths."
+    },
+    {
+      "name": "kq_graph",
+      "description": "Trace live reachability for used, unused, overshadowed, and missing references."
+    },
+    {
+      "name": "kq_delta",
+      "description": "Compare two resources, a loaded copy against what it shadows, or across installs."
+    }
+  ]
+}

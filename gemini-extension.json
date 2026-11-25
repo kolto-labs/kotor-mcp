@@ -1,0 +1,19 @@
+{
+  "name": "kotor-mcp",
+  "version": "0.5.0",
+  "description": "Read-only MCP server for querying Knights of the Old Republic I & II installations in place.",
+  "settings": [
+    {
+      "name": "KotOR Install Folder",
+      "description": "Path to your KotOR or KotOR II game folder containing chitin.key.",
+      "envVar": "KQ_INSTALL",
+      "sensitive": false
+    }
+  ],
+  "mcpServers": {
+    "kq": {
+      "command": "kq",
+      "args": ["mcp"]
+    }
+  }
+}
