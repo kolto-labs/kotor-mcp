@@ -18,6 +18,13 @@
 * accept `cat --module ROOT --tag TAG --type EXT` for typed placed GIT objects
 * accept standalone resource/archive paths in `cat --from` without installation discovery
 
+## [0.5.0](https://github.com/kolto-labs/kotor-mcp/compare/v0.4.0...v0.5.0) (2026-11-25)
+
+
+### Features
+
+* add kq MCP server and restructure AI plugin, skills, and agent docs ([#9](https://github.com/kolto-labs/kotor-mcp/issues/9)) ([b94099a](https://github.com/kolto-labs/kotor-mcp/commit/b94099a2b78c00cce7fc3ad7821e71ca7bb655d7))
+
 ## [0.4.0](https://github.com/kolto-labs/kq/compare/v0.3.0...v0.4.0) (2026-10-24)
 
 
