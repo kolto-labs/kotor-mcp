@@ -1,5 +1,7 @@
 # Using kq with AI agents
 
+> **Fastest setup:** Use the interactive setup generator at **[kolto-labs.github.io/kotor-mcp](https://kolto-labs.github.io/kotor-mcp/)** to get ready-to-paste configs for Claude, Gemini, ChatGPT, Cursor, or VS Code with your game path already escaped.
+
 kq reaches agents in three layers. Use as many as your tool supports:
 
 1. **MCP server**: `kq mcp` exposes the read-only commands as tools. It works with any MCP client.

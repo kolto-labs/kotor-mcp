@@ -18,7 +18,7 @@ The starred line is the copy the game actually loads. Everything below it is
 shadowed. That question is what KotOR modding gets wrong most often; `kq which`
 answers it directly.
 
-Full walkthrough, recipes, and format notes: **[User guide](docs/user-guide.md)**.
+Full walkthrough, recipes, and format notes: **[User guide](docs/user-guide.md)**. Interactive MCP setup for Claude, Gemini, ChatGPT, and Cursor: **[kolto-labs.github.io/kotor-mcp](https://kolto-labs.github.io/kotor-mcp/)**.
 
 ---
 
@@ -94,7 +94,7 @@ with skills and an explorer agent:
 /plugin install kq@kolto-labs
 ```
 
-Other clients, Cursor, and config snippets: **[Using kq with AI agents](docs/ai-agents.md)**.
+Interactive setup generator and prompt cookbook: **[kolto-labs.github.io/kotor-mcp](https://kolto-labs.github.io/kotor-mcp/)**. Other clients, Cursor, and config snippets: **[Using kq with AI agents](docs/ai-agents.md)**.
 
 ---
 
